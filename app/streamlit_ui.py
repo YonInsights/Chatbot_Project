@@ -5,10 +5,10 @@ import os
 import sys
 
 # Add the project root to sys.path
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-sys.path.insert(0, project_root)
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from chatbot.chatbot_logic import start_chatbot
+from fpdf import FPDF
 
 def main():
     st.title("Skill Roadmap Chatbot")
@@ -19,8 +19,8 @@ def main():
     # User Inputs
     st.write("Please answer the following questions:")
     skill_level = st.selectbox("What is your current skill or experience level?", ["Beginner", "Intermediate", "Advanced"])
-    goal = st.text_input("What new skill or field are you interested in learning?")
-    time_available = st.number_input("How much time per week can you dedicate to learning this new skill?", min_value=1, max_value=40, step=1)
+    goal = st.text_input("What specific skill or field are you interested in learning or improving?")
+    time_available = st.number_input("How many hours per week can you dedicate to learning this new skill?", min_value=1, max_value=40, step=1)
     
     if st.button("Generate Roadmap"):
         if uploaded_file is not None:
@@ -28,36 +28,4 @@ def main():
             cv_content = extract_text_from_file(uploaded_file)
             
             # Call the chatbot function with the extracted CV content and user inputs
-            roadmap = start_chatbot(skill_level, goal, time_available, cv_content)
-            
-            # Display the roadmap in a tabulated format
-            st.write("## Here is your personalized roadmap:")
-            for i, skill in enumerate(roadmap["skills_to_learn"]):
-                st.markdown(f"**Skill:** {skill}")
-                st.markdown(f"**Suggested Material:** {roadmap['learning_materials'][i]}")
-                st.markdown(f"**Estimated Time:** {roadmap['time_estimations'][i]}")
-                st.markdown("---")
-
-            # Add motivational text
-            st.write("### Keep going! Consistency is key to mastering new skills. You've got this!")
-            
-            # Display option to download as PDF (implementation in next step)
-            if st.button("Download as PDF"):
-                st.write("Download feature coming soon!")
-        else:
-            st.write("Please upload your CV.")
-
-def extract_text_from_file(uploaded_file):
-    if uploaded_file.type == "application/pdf":
-        return extract_text_from_pdf(uploaded_file)
-    elif uploaded_file.type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
-        return extract_text_from_docx(uploaded_file)
-    else:
-        return "Unsupported file type."
-
-def extract_text_from_pdf(file):
-    document = fitz.open(stream=file.read(), filetype="pdf")
-    text = ""
-    for page in document:
-        text += page.get_text()
-    return
+            cv_summary, roadmap = start

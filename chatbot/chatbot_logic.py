@@ -15,7 +15,7 @@ def analyze_cv(cv_content):
     response = chat.invoke(messages)
     return response.content
 
-def start_chatbot(cv_content, goal, time_available):
+def start_chatbot(cv_content, skill_level, goal, time_available):
     cv_summary = analyze_cv(cv_content)
     
     # Specific questions based on CV summary
@@ -39,10 +39,11 @@ def start_chatbot(cv_content, goal, time_available):
 
 if __name__ == "__main__":
     # Example inputs for testing purposes
+    skill_level = "Intermediate"
     goal = "Frontend"
-    time_available = 10
+    time_available = 3
     cv_content = "Example CV content"
     
-    roadmap = start_chatbot(cv_content, goal, time_available)
+    roadmap = start_chatbot(cv_content, skill_level, goal, time_available)
     print("\nGenerated Roadmap:")
     print(roadmap)

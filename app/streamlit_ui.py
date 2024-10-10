@@ -4,6 +4,7 @@ import docx
 import os
 import sys
 from fpdf import FPDF
+from io import BytesIO
 
 # Add the project root to sys.path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -41,28 +42,35 @@ def main():
             # Add motivational section
             st.write("Remember, consistency is key to mastering new skills. Believe in yourself and stay dedicated. You can do this!")
             
-            # Generate PDF
-            if st.button("Download as PDF"):
-                pdf = FPDF()
-                pdf.add_page()
-                pdf.set_font("Arial", size=12)
+            # Generate PDF content
+            pdf = FPDF()
+            pdf.add_page()
+            pdf.set_font("Arial", size=12)
                 
-                pdf.cell(200, 10, txt="Personalized Study Roadmap", ln=True, align="C")
-                pdf.ln(10)
+            pdf.cell(200, 10, txt="Personalized Study Roadmap", ln=True, align="C")
+            pdf.ln(10)
                 
-                for skill, material, time in zip(roadmap["skills_to_learn"], roadmap["learning_materials"], roadmap["time_estimations"]):
-                    pdf.cell(200, 10, txt=f"Skill: {skill}", ln=True)
-                    pdf.cell(200, 10, txt=f"Suggested Material: {material}", ln=True)
-                    pdf.cell(200, 10, txt=f"Estimated Time: {time}", ln=True)
-                    pdf.ln(5)
+            for skill, material, time in zip(roadmap["skills_to_learn"], roadmap["learning_materials"], roadmap["time_estimations"]):
+                pdf.cell(200, 10, txt=f"Skill: {skill}", ln=True)
+                pdf.cell(200, 10, txt=f"Suggested Material: {material}", ln=True)
+                pdf.cell(200, 10, txt=f"Estimated Time: {time}", ln=True)
+                pdf.ln(5)
                 
-                pdf.ln(10)
-                pdf.cell(200, 10, txt="Motivational Section:", ln=True)
-                pdf.multi_cell(0, 10, txt="Remember, consistency is key to mastering new skills. Believe in yourself and stay dedicated. You can do this!")
-                
-                pdf_output_path = "roadmap.pdf"
-                pdf.output(pdf_output_path)
-                st.write(f"PDF generated! [Download it here](roadmap.pdf)")
+            pdf.ln(10)
+            pdf.cell(200, 10, txt="Motivational Section:", ln=True)
+            pdf.multi_cell(0, 10, txt="Remember, consistency is key to mastering new skills. Believe in yourself and stay dedicated. You can do this!")
+            
+            pdf_output = BytesIO()
+            pdf.output(pdf_output, 'F')
+            pdf_output.seek(0)
+            
+            # Provide download button
+            st.download_button(
+                label="Download Roadmap as PDF",
+                data=pdf_output,
+                file_name="roadmap.pdf",
+                mime="application/pdf",
+            )
         else:
             st.write("Please upload your CV.")
 

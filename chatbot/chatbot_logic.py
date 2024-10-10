@@ -39,10 +39,10 @@ def start_chatbot(cv_content, skill_level, goal, time_available):
 
 if __name__ == "__main__":
     # Example inputs for testing purposes
+    cv_content = "Example CV content"
     skill_level = "Intermediate"
     goal = "Frontend"
     time_available = 3
-    cv_content = "Example CV content"
     
     roadmap = start_chatbot(cv_content, skill_level, goal, time_available)
     print("\nGenerated Roadmap:")

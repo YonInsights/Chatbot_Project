@@ -18,6 +18,7 @@ def main():
     
     # User Inputs
     st.write("Please answer the following questions:")
+    skill_level = st.selectbox("What is your current skill or experience level?", ["Beginner", "Intermediate", "Advanced"])
     goal = st.text_input("What new skill or field are you interested in learning?")
     time_available = st.number_input("How much time per week can you dedicate to learning this new skill?", min_value=1, max_value=40, step=1)
     
@@ -27,7 +28,7 @@ def main():
             cv_content = extract_text_from_file(uploaded_file)
             
             # Call the chatbot function with the extracted CV content and user inputs
-            roadmap = start_chatbot(cv_content=cv_content, goal=goal, time_available=time_available)
+            roadmap = start_chatbot(skill_level=skill_level, goal=goal, time_available=time_available, cv_content=cv_content)
             
             # Display the roadmap in a table
             st.write("Here is your personalized roadmap:")

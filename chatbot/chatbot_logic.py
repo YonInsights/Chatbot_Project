@@ -1,5 +1,4 @@
 import os
-import sys
 from langchain_groq import ChatGroq  # Import ChatGroq for Groq API
 from langchain.schema import HumanMessage, SystemMessage
 from models.roadmap_generator import generate_roadmap  # Import the roadmap generator

@@ -1,59 +1,31 @@
-# roadmap_generator.py
+def generate_roadmap(user_inputs, cv_content):
+    skills_to_learn = []
+    learning_materials = []
+    time_estimations = []
 
-# Import any required libraries
-import os
+    # Debug: Print user inputs and CV content for troubleshooting
+    print("\n[DEBUG] generate_roadmap() called with the following parameters:")
+    print(f"user_inputs: {user_inputs}")
+    print(f"cv_content: {cv_content}")
 
-# Function to generate the learning roadmap
-def generate_roadmap(user_input, cv_content):
-    """
-    Generate a personalized learning roadmap based on user input and CV.
-    
-    Parameters:
-        user_input (dict): A dictionary containing the user's responses to the questions.
-        cv_content (str): The content of the user's CV (parsed).
-    
-    Returns:
-        dict: A structured roadmap with skills, learning materials, and time estimates.
-    """
-    
-    # Sample predefined skills and learning materials (this could be dynamic in the future)
-    roadmap = {
-        "skills_to_learn": [],
-        "learning_materials": [],
-        "time_estimations": []
+    # Example logic to generate a roadmap based on user inputs and CV content
+    if user_inputs["current_skill_level"].lower() == "beginner":
+        if "frontend" in user_inputs["goal"].lower():
+            skills_to_learn.extend(["HTML & CSS", "JavaScript Basics"])
+            learning_materials.extend([
+                "HTML & CSS by Jon Duckett",
+                "Eloquent JavaScript by Marijn Haverbeke"
+            ])
+            time_estimations.extend(["4 weeks", "6 weeks"])
+
+    # Debug: Print generated roadmap for troubleshooting
+    print("\n[DEBUG] Roadmap generated:")
+    print(f"skills_to_learn: {skills_to_learn}")
+    print(f"learning_materials: {learning_materials}")
+    print(f"time_estimations: {time_estimations}")
+
+    return {
+        "skills_to_learn": skills_to_learn,
+        "learning_materials": learning_materials,
+        "time_estimations": time_estimations
     }
-    
-    # Analyze user input
-    if "data science" in user_input["goal"].lower():
-        roadmap["skills_to_learn"] = ["Python", "SQL", "Data Visualization", "Machine Learning"]
-        roadmap["learning_materials"] = [
-            "Python for Data Science (Course)",
-            "SQL Essentials for Data Analysts (Tutorial)",
-            "Data Visualization using Matplotlib and Seaborn (Video Series)",
-            "Machine Learning Basics (Book)"
-        ]
-        roadmap["time_estimations"] = [
-            "3 weeks",  # Python
-            "2 weeks",  # SQL
-            "2 weeks",  # Data Visualization
-            "4 weeks"   # Machine Learning
-        ]
-    
-    # Add more conditions to match other learning paths
-    # For example, if the user wants to transition into Web Development
-    if "web development" in user_input["goal"].lower():
-        roadmap["skills_to_learn"] = ["HTML", "CSS", "JavaScript", "React.js"]
-        roadmap["learning_materials"] = [
-            "Intro to HTML/CSS (Course)",
-            "JavaScript for Beginners (Course)",
-            "React.js Basics (Video Series)"
-        ]
-        roadmap["time_estimations"] = [
-            "2 weeks",  # HTML/CSS
-            "3 weeks",  # JavaScript
-            "4 weeks"   # React.js
-        ]
-    
-    # Future functionality could analyze CV content to further tailor the roadmap
-    
-    return roadmap

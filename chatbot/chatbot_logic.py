@@ -36,6 +36,11 @@ def start_chatbot(skill_level, goal, time_available, cv_content):
     # Send the messages to the model
     response = chat.invoke(messages)
     
+    # Debug: Print the user inputs and CV content
+    print("\nUser Inputs:")
+    for key, value in user_inputs.items():
+        print(f"{key}: {value}")
+    
     # Generate the roadmap based on user inputs and CV content
     roadmap = generate_roadmap(user_inputs, cv_content)  # Pass user inputs and CV content
     
@@ -43,5 +48,11 @@ def start_chatbot(skill_level, goal, time_available, cv_content):
 
 if __name__ == "__main__":
     # Example inputs for testing purposes
-    roadmap = start_chatbot("Beginner", "Frontend", 10, "Example CV content")
+    skill_level = "Beginner"
+    goal = "Frontend"
+    time_available = 10
+    cv_content = "Example CV content"
+    
+    roadmap = start_chatbot(skill_level, goal, time_available, cv_content)
+    print("\nGenerated Roadmap:")
     print(roadmap)

@@ -1,6 +1,13 @@
 import streamlit as st
 import fitz  # PyMuPDF
 import docx
+import os
+import sys
+
+# Add the project root to sys.path
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.insert(0, project_root)
+
 from chatbot.chatbot_logic import start_chatbot
 
 def main():

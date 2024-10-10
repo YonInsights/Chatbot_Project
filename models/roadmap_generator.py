@@ -18,11 +18,7 @@ def generate_roadmap(user_inputs, cv_content):
             ])
             time_estimations.extend(["4 weeks", "6 weeks"])
 
-    # Debug: Print generated roadmap for troubleshooting
-    print("\n[DEBUG] Roadmap generated:")
-    print(f"skills_to_learn: {skills_to_learn}")
-    print(f"learning_materials: {learning_materials}")
-    print(f"time_estimations: {time_estimations}")
+    # Add more logic based on cv_content and other user inputs
 
     return {
         "skills_to_learn": skills_to_learn,

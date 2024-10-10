@@ -30,12 +30,20 @@ def main():
             # Call the chatbot function with the extracted CV content and user inputs
             roadmap = start_chatbot(skill_level, goal, time_available, cv_content)
             
-            # Display the roadmap
-            st.write("Here is your personalized roadmap:")
+            # Display the roadmap in a tabulated format
+            st.write("## Here is your personalized roadmap:")
             for i, skill in enumerate(roadmap["skills_to_learn"]):
-                st.write(f"Skill: {skill}")
-                st.write(f"Suggested Material: {roadmap['learning_materials'][i]}")
-                st.write(f"Estimated Time: {roadmap['time_estimations'][i]}\n")
+                st.markdown(f"**Skill:** {skill}")
+                st.markdown(f"**Suggested Material:** {roadmap['learning_materials'][i]}")
+                st.markdown(f"**Estimated Time:** {roadmap['time_estimations'][i]}")
+                st.markdown("---")
+
+            # Add motivational text
+            st.write("### Keep going! Consistency is key to mastering new skills. You've got this!")
+            
+            # Display option to download as PDF (implementation in next step)
+            if st.button("Download as PDF"):
+                st.write("Download feature coming soon!")
         else:
             st.write("Please upload your CV.")
 
@@ -52,14 +60,4 @@ def extract_text_from_pdf(file):
     text = ""
     for page in document:
         text += page.get_text()
-    return text
-
-def extract_text_from_docx(file):
-    doc = docx.Document(file)
-    text = ""
-    for paragraph in doc.paragraphs:
-        text += paragraph.text + "\n"
-    return text
-
-if __name__ == "__main__":
-    main()
+    return

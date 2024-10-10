@@ -1,5 +1,5 @@
 import streamlit as st
-import fitz
+import fitz  # PyMuPDF
 import docx
 import os
 import sys
@@ -16,26 +16,26 @@ def main():
     # CV Upload
     uploaded_file = st.file_uploader("Upload your CV", type=["pdf", "docx"])
     
-    if st.button("Analyze CV and Generate Roadmap"):
+    # User Inputs
+    st.write("Please answer the following questions:")
+    goal = st.text_input("What new skill or field are you interested in learning?")
+    time_available = st.number_input("How much time per week can you dedicate to learning this new skill?", min_value=1, max_value=40, step=1)
+    
+    if st.button("Generate Roadmap"):
         if uploaded_file is not None:
             # Extract text from the uploaded file
             cv_content = extract_text_from_file(uploaded_file)
             
-            # Call the chatbot function with the extracted CV content
-            cv_summary, roadmap = start_chatbot(cv_content)
-            
-            # Display CV summary
-            st.write("CV Summary:")
-            st.write(cv_summary)
+            # Call the chatbot function with the extracted CV content and user inputs
+            roadmap = start_chatbot(cv_content, goal, time_available)
             
             # Display the roadmap in a table
             st.write("Here is your personalized roadmap:")
-            roadmap_df = {
+            st.table({
                 "Skill": roadmap["skills_to_learn"],
                 "Suggested Material": roadmap["learning_materials"],
                 "Estimated Time": roadmap["time_estimations"]
-            }
-            st.table(roadmap_df)
+            })
             
             # Add motivational section
             st.write("Remember, consistency is key to mastering new skills. Believe in yourself and stay dedicated. You can do this!")
@@ -49,9 +49,6 @@ def main():
                 pdf.cell(200, 10, txt="Personalized Study Roadmap", ln=True, align="C")
                 pdf.ln(10)
                 
-                pdf.cell(200, 10, txt=f"CV Summary: {cv_summary}", ln=True)
-                pdf.ln(10)
-                
                 for skill, material, time in zip(roadmap["skills_to_learn"], roadmap["learning_materials"], roadmap["time_estimations"]):
                     pdf.cell(200, 10, txt=f"Skill: {skill}", ln=True)
                     pdf.cell(200, 10, txt=f"Suggested Material: {material}", ln=True)
@@ -62,9 +59,9 @@ def main():
                 pdf.cell(200, 10, txt="Motivational Section:", ln=True)
                 pdf.multi_cell(0, 10, txt="Remember, consistency is key to mastering new skills. Believe in yourself and stay dedicated. You can do this!")
                 
-                pdf.output("roadmap.pdf")
-                st.write("PDF generated! Check your project folder.")
-
+                pdf_output_path = "roadmap.pdf"
+                pdf.output(pdf_output_path)
+                st.write(f"PDF generated! [Download it here](roadmap.pdf)")
         else:
             st.write("Please upload your CV.")
 

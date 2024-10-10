@@ -1,62 +1,64 @@
 import os
 import sys
-
-# Add the project root to sys.path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-from langchain_groq import ChatGroq  # Import ChatGroq for Groq API
+from langchain_groq import ChatGroq
 from langchain.schema import HumanMessage, SystemMessage
-from models.roadmap_generator import generate_roadmap  # Import the roadmap generator
+from models.roadmap_generator import generate_roadmap
 
 # Set the API key for the Groq model
 os.environ['My_AI'] = "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"
-chat = ChatGroq(api_key=os.environ['My_AI'])  # Initialize ChatGroq with the API key
+chat = ChatGroq(api_key=os.environ['My_AI'])
 
-def start_chatbot(skill_level, goal, time_available, cv_content):
-    # System message to introduce the bot
-    system_message = SystemMessage(content="You are an AI that helps users create a roadmap to acquire new skills. You have analyzed the CV to understand the user's background. Ask up to 3 questions to further clarify their learning needs.")
+def summarize_cv(cv_content):
+    # Summarize CV content (placeholder implementation)
+    summary = f"Summary of CV: {cv_content[:200]}..."  # Take first 200 characters as summary
+    return summary
+
+def start_chatbot(cv_content):
+    cv_summary = summarize_cv(cv_content)
+    
+    # System message with CV summary
+    system_message = SystemMessage(content=f"You are an AI that helps users create a roadmap to acquire new skills. Here is the user's CV summary: {cv_summary} Based on this, ask 3 questions to understand what skills they need to develop.")
     
     # Initialize conversation with system message
     messages = [system_message]
     
-    # Summarize CV
-    cv_summary = summarize_cv(cv_content)
-    messages.append(SystemMessage(content=f"CV Summary: {cv_summary}"))
+    # Questions for the user
+    questions = [
+        "From your CV, it looks like you have experience in [current experience]. What is your current skill or experience level?",
+        "What new skill or field are you interested in learning?",
+        "How much time per week can you dedicate to learning this new skill?"
+    ]
     
-    # Store user inputs in a dictionary
-    user_inputs = {
-        "current_skill_level": skill_level,
-        "goal": goal,
-        "time_available": time_available
-    }
+    user_inputs = {}
     
-    # Add the user's inputs to the conversation
-    for key, value in user_inputs.items():
-        human_message = HumanMessage(content=f"{key.replace('_', ' ').capitalize()}: {value}")
+    # Loop through and ask the user 3 questions
+    for i, question in enumerate(questions):
+        # Display the question to the user
+        print(question)
+        
+        # Get the user's input
+        user_input = input("Your response: ")
+        
+        # Store user input
+        user_inputs[f"question_{i+1}"] = user_input
+        
+        # Add the user's message to the conversation
+        human_message = HumanMessage(content=user_input)
         messages.append(human_message)
     
     # Send the messages to the model
     response = chat.invoke(messages)
     
     # Generate the roadmap based on user inputs and CV content
-    roadmap = generate_roadmap(user_inputs, cv_content)  # Pass user inputs and CV content
+    roadmap = generate_roadmap(user_inputs, cv_content)
     
     return cv_summary, roadmap
 
-def summarize_cv(cv_text):
-    # Simple summarization logic (can be improved with NLP techniques)
-    sentences = cv_text.split('.')
-    summary = ' '.join(sentences[:3])  # Taking the first 3 sentences as summary
-    return summary
-
 if __name__ == "__main__":
-    # Example inputs for testing purposes
-    skill_level = "Beginner"
-    goal = "Frontend"
-    time_available = 10
-    cv_content = "Example CV content"
+    # Example CV content for testing purposes
+    cv_content = "Example CV content with detailed information about the person's experience and skills."
     
-    cv_summary, roadmap = start_chatbot(skill_level, goal, time_available, cv_content)
+    cv_summary, roadmap = start_chatbot(cv_content)
     print("\nCV Summary:")
     print(cv_summary)
     print("\nGenerated Roadmap:")

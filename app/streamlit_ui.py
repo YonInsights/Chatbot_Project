@@ -27,7 +27,7 @@ def main():
             cv_content = extract_text_from_file(uploaded_file)
             
             # Call the chatbot function with the extracted CV content and user inputs
-            roadmap = start_chatbot(cv_content, goal, time_available)
+            roadmap = start_chatbot(cv_content=cv_content, goal=goal, time_available=time_available)
             
             # Display the roadmap in a table
             st.write("Here is your personalized roadmap:")

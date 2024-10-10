@@ -61,7 +61,7 @@ def main():
             pdf.multi_cell(0, 10, txt="Remember, consistency is key to mastering new skills. Believe in yourself and stay dedicated. You can do this!")
             
             pdf_output = BytesIO()
-            pdf.output(pdf_output, 'F')
+            pdf.output(pdf_output)
             pdf_output.seek(0)
             
             # Provide download button

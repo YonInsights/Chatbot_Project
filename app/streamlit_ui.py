@@ -26,45 +26,49 @@ def main():
         roadmap = start_chatbot(skill_level, goal, time_available, learning_preference, target_industry)
         
         # Display the roadmap in a table
-        st.write("Here is your personalized roadmap:")
-        st.table({
-            "Skill": roadmap["skills_to_learn"],
-            "Suggested Material": roadmap["learning_materials"],
-            "Estimated Time": roadmap["time_estimations"]
-        })
-        
-        # Add motivational section
-        st.write("Remember, consistency is key to mastering new skills. Believe in yourself and stay dedicated. You can do this!")
-        
-        # Generate PDF content
-        pdf = FPDF()
-        pdf.add_page()
-        pdf.set_font("Arial", size=12)
-            
-        pdf.cell(200, 10, txt="Personalized Study Roadmap", ln=True, align="C")
-        pdf.ln(10)
-            
-        for skill, material, time in zip(roadmap["skills_to_learn"], roadmap["learning_materials"], roadmap["time_estimations"]):
-            pdf.cell(200, 10, txt=f"Skill: {skill}", ln=True)
-            pdf.cell(200, 10, txt=f"Suggested Material: {material}", ln=True)
-            pdf.cell(200, 10, txt=f"Estimated Time: {time}", ln=True)
-            pdf.ln(5)
-            
-        pdf.ln(10)
-        pdf.cell(200, 10, txt="Motivational Section:", ln=True)
-        pdf.multi_cell(0, 10, txt="Remember, consistency is key to mastering new skills. Believe in yourself and stay dedicated. You can do this!")
-        
-        pdf_output = BytesIO()
-        pdf.output(pdf_output)
-        pdf_output.seek(0)
-        
-        # Provide download button
-        st.download_button(
-            label="Download Roadmap as PDF",
-            data=pdf_output,
-            file_name="roadmap.pdf",
-            mime="application/pdf",
-        )
+        if roadmap["skills_to_learn"]:
+            st.write("Here is your personalized roadmap:")
+            st.table({
+                "Skill": roadmap["skills_to_learn"],
+                "Suggested Material": roadmap["learning_materials"],
+                "Estimated Time": roadmap["time_estimations"]
+            })
+
+            # Add motivational section
+            st.write("Remember, consistency is key to mastering new skills. Believe in yourself and stay dedicated. You can do this!")
+
+            # Generate PDF content
+            pdf = FPDF()
+            pdf.add_page()
+            pdf.set_font("Arial", size=12)
+
+            pdf.cell(200, 10, txt="Personalized Study Roadmap", ln=True, align="C")
+            pdf.ln(10)
+
+            for skill, material, time in zip(roadmap["skills_to_learn"], roadmap["learning_materials"], roadmap["time_estimations"]):
+                pdf.cell(200, 10, txt=f"Skill: {skill}", ln=True)
+                pdf.cell(200, 10, txt=f"Suggested Material: {material}", ln=True)
+                pdf.cell(200, 10, txt=f"Estimated Time: {time}", ln=True)
+                pdf.ln(5)
+
+            pdf.ln(10)
+            pdf.cell(200, 10, txt="Motivational Section:", ln=True)
+            pdf.multi_cell(0, 10, txt="Remember, consistency is key to mastering new skills. Believe in yourself and stay dedicated. You can do this!")
+
+            # Create a BytesIO buffer
+            pdf_output = BytesIO()
+            pdf.output(pdf_output)  # Write PDF to the buffer
+            pdf_output.seek(0)      # Move to the beginning of the buffer
+
+            # Provide download button
+            st.download_button(
+                label="Download Roadmap as PDF",
+                data=pdf_output,
+                file_name="roadmap.pdf",
+                mime="application/pdf",
+            )
+        else:
+            st.write("No roadmap generated. Please ensure all inputs are correct.")
 
 if __name__ == "__main__":
     main()

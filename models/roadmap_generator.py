@@ -3,7 +3,7 @@ def generate_roadmap(user_inputs):
     learning_materials = []
     time_estimations = []
 
-    # Logic to generate a roadmap based on user inputs
+    # Generate a roadmap based on user inputs
     goal = user_inputs["goal"].lower()
     if "frontend" in goal:
         skills_to_learn.extend(["HTML & CSS", "JavaScript Basics", "React"])
@@ -14,7 +14,7 @@ def generate_roadmap(user_inputs):
         ])
         time_estimations.extend(["4 weeks", "6 weeks", "8 weeks"])
 
-    # Add more logic based on user_inputs
+    # Add more logic based on user inputs
 
     return {
         "skills_to_learn": skills_to_learn,

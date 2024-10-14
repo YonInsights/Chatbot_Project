@@ -98,43 +98,14 @@ def main():
         # Call the chatbot function with the user inputs
         roadmap = start_chatbot(skill_level, goal, time_available, learning_preference, target_industry)
 
-        # Check if roadmap is None or Empty
-        if roadmap is None:
-            st.write("Error: The roadmap returned None.")
-            return
-        else:
+        # Ensure the roadmap is a dictionary and contains the expected keys
+        if isinstance(roadmap, dict) and "skills_to_learn" in roadmap and "learning_materials" in roadmap and "time_estimations" in roadmap:
             st.write("Roadmap is not None:", roadmap)
 
-        # Parsing the roadmap string if it is still a string
-        if isinstance(roadmap, str):
-            st.write(f"Warning: The roadmap is a string. Attempting to parse it.")
-            sections = roadmap.strip().split("\n\n")
-
-            # Creating a structured roadmap dictionary
-            roadmap_dict = {
-                "weeks": [],
-                "suggested_materials": [],
-            }
-
-            for section in sections:
-                lines = section.strip().split("\n")
-                if len(lines) >= 2:
-                    roadmap_dict["weeks"].append(lines[0])  # Week title
-                    roadmap_dict["suggested_materials"].append("\n".join(lines[1:]))
-
-            # Calculate estimated times based on user input
-            roadmap_dict["estimated_times"] = calculate_estimated_time(roadmap_dict["weeks"], time_available)
-            roadmap = roadmap_dict  # Update roadmap to structured dictionary
-
-        # At this point, we are assured that roadmap is a dictionary
-        if "weeks" in roadmap and "suggested_materials" in roadmap and "estimated_times" in roadmap:
-            st.write("Roadmap generated successfully!")
-            roadmap_df = {
-                "Week": roadmap["weeks"],
-                "Suggested Material": roadmap["suggested_materials"],
-                "Estimated Time": roadmap["estimated_times"]
-            }
-            st.table(roadmap_df)
+            # Prepare data for the PDF
+            skills_to_learn = roadmap["skills_to_learn"]
+            learning_materials = roadmap["learning_materials"]
+            time_estimations = roadmap["time_estimations"]
 
             # Generate PDF content
             pdf = PDF()
@@ -157,22 +128,15 @@ def main():
             resources = generate_resources(goal)
 
             # Add all weeks, materials, and estimated times to PDF
-            for week, material, estimated_time in zip(roadmap["weeks"], roadmap["suggested_materials"], roadmap["estimated_times"]):
+            for week, material, estimated_time in zip(skills_to_learn, learning_materials, time_estimations):
                 pdf.chapter_title(f"Week: {week}")
                 pdf.add_bullet_points(material.split("\n"), indent=10)  # Add bullet points for materials
                 pdf.add_bullet_points(resources, indent=25)  # Add dynamic resources for each topic with 1-inch indent
                 pdf.chapter_body(f"Estimated Time: {estimated_time}")
 
-                # Use `->` for milestone connection instead of unsupported arrow character
-                pdf.chapter_body("-> Next Milestone")
-
-            # Add a motivational section
-            pdf.chapter_title("Motivational Section")
-            pdf.chapter_body("Remember, consistency is key to mastering new skills. Believe in yourself and stay dedicated. You can do this!")
-
             # Add a summary table at the end of the PDF
             pdf.chapter_title("Summary of Roadmap")
-            pdf.add_summary_table(roadmap["weeks"], roadmap["suggested_materials"], roadmap["estimated_times"])
+            pdf.add_summary_table(skills_to_learn, learning_materials, time_estimations)
 
             # Prepare PDF for download
             pdf_output = BytesIO()

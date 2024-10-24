@@ -9,25 +9,31 @@ from PIL import Image
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, project_root)
 
-from chatbot.chatbot_logic import start_chatbot  # Correct import for chatbot_logic
+from chatbot.chatbot_logic import start_chatbot  
+# Correct import for chatbot_logic
 
 class PDF(FPDF):
     def __init__(self):
         super().__init__()
-        self.set_margins(25.4, 25.4, 25.4)  # Set 1-inch margins (25.4 mm)
+        self.set_margins(25.4, 25.4, 25.4)  
+        # Set 1-inch margins (25.4 mm)
         self.first_page = True
 
     def header(self):
         if self.first_page:
             # Add logo at the header (top right)
-            self.image(r"D:\Project_1\skill_roadmap_chatbot\Icon bleu2 Eleka.png", x=170, y=8, w=30)  # Adjust size and position
-            self.set_font("Times", 'B', 16)  # Header font size
+            self.image(r"D:\Project_1\skill_roadmap_chatbot\Icon bleu2 Eleka.png", x=170, y=8, w=30)  
+            # Adjust size and position
+            self.set_font("Times", 'B', 16)  
+            # Header font size
             self.cell(0, 10, 'Personalized Study Roadmap', 0, 1, 'C')
-            self.set_font("Times", 'I', 12)  # Slogan font size
+            self.set_font("Times", 'I', 12)  
+            # Slogan font size
             self.cell(0, 10, 'Study Today, Succeed Tomorrow!', 0, 1, 'C')
             self.ln(5)
             # Add rocket icon in header
-            self.image(r"D:\Project_1\skill_roadmap_chatbot\Icons\Rocket_Icon.png", x=10, y=8, w=30)  # Adjust path, size, and position
+            self.image(r"D:\Project_1\skill_roadmap_chatbot\Icons\Rocket_Icon.png", x=10, y=8, w=30)  
+            # Adjust path, size, and position
             self.first_page = False
         else:
             self.set_font("Times", 'I', 12)  # Slogan font size
@@ -41,10 +47,14 @@ class PDF(FPDF):
         self.cell(0, 10, f'Page {self.page_no()}', 0, 1, 'C')
         self.ln(5)
         # Social media icons
-        self.image(r"D:\Project_1\skill_roadmap_chatbot\Icons\facebook-logo.png", x=10, w=10)  # Adjust path, size, and position
-        self.image(r"D:\Project_1\skill_roadmap_chatbot\Icons\telegram.png", x=25, w=10)  # Adjust path, size, and position
-        self.image(r"D:\Project_1\skill_roadmap_chatbot\Icons\linkedin.png", x=40, w=10)  # Adjust path, size, and position
-        self.image(r"D:\Project_1\skill_roadmap_chatbot\Icons\instagram.png", x=55, w=10)  # Adjust path, size, and position
+        self.image(r"D:\Project_1\skill_roadmap_chatbot\Icons\facebook-logo.png", x=10, w=10) 
+         # Adjust path, size, and position
+        self.image(r"D:\Project_1\skill_roadmap_chatbot\Icons\telegram.png", x=25, w=10)  
+        # Adjust path, size, and position
+        self.image(r"D:\Project_1\skill_roadmap_chatbot\Icons\linkedin.png", x=40, w=10) 
+         # Adjust path, size, and position
+        self.image(r"D:\Project_1\skill_roadmap_chatbot\Icons\instagram.png", x=55, w=10) 
+         # Adjust path, size, and position
 
     def chapter_title(self, title):
         self.set_font("Times", 'B', 12)
@@ -63,7 +73,7 @@ class PDF(FPDF):
             self.cell(indent)  # Indent for bullet points
             # Add yellow star bullet point icon
             self.image(r"D:\Project_1\skill_roadmap_chatbot\Icons\star.png", x=self.get_x(), y=self.get_y(), w=5)  # Adjust path, size, and position
-            self.cell(indent + 5)  # Adjust text indentation to avoid overlap with icon
+            self.cell(indent + 0.2)  # Adjust text indentation to avoid overlap with icon
             if "http" in item:  # Check if it's a link
                 self.set_text_color(0, 0, 255)  # Set link color to blue
                 self.cell(0, 10, item, ln=1, link=item)  # Create clickable link
@@ -77,12 +87,15 @@ class PDF(FPDF):
         self.cell(100, 10, "Suggested Material", border=1)
         self.cell(30, 10, "Estimated Time", border=1)
         self.ln()
-        self.set_font("Times", '', 10)  # Set the table body font size to 10
+        self.set_font("Times", '', 10) 
+         # Set the table body font size to 10
         for week, material, estimated_time in zip(weeks, materials, estimated_times):
             self.cell(30, 10, week, border=1)
-            self.multi_cell(100, 10, material, border=1, align='L')  # Ensure content wraps within the cell
+            self.multi_cell(100, 10, material, border=1, align='L') 
+             # Ensure content wraps within the cell
             self.cell(30, -10, estimated_time, border=1)
-            self.ln(0)  # Ensure no additional line spacing after the row
+            self.ln(0)  
+            # Ensure no additional line spacing after the row
 
 def calculate_estimated_time(weeks, time_available):
     estimated_times = [f"{time_available} hours" for _ in weeks]
@@ -155,8 +168,8 @@ def main():
             # Add all weeks, materials, and estimated times to PDF
             for week, material, estimated_time in zip(skills_to_learn, learning_materials, time_estimations):
                 pdf.chapter_title(f"Week: {week}")
-                pdf.add_bullet_points(material.split("\n"), indent=10)  # Add bullet points for materials
-                pdf.add_bullet_points(resources, indent=25)  # Add dynamic resources for each topic with 1-inch indent
+                pdf.add_bullet_points(material.split("\n"), indent=13)  # Add bullet points for materials
+                pdf.add_bullet_points(resources, indent=15)  # Add dynamic resources for each topic with 1-inch indent
                 pdf.chapter_body(f"Estimated Time: {estimated_time}")
 
             # Add a summary table at the end of the PDF
